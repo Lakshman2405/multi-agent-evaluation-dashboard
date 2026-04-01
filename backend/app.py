@@ -1,12 +1,20 @@
 import streamlit as st
 import json
 import pandas as pd
+import os
 st.set_page_config(layout="wide", page_title="MedQA Research Dashboard")
 
 # ---------------- LOAD DATA ----------------
-with open("dashboard_medqa.json") as f:
-    data = json.load(f)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(BASE_DIR, "dashboard_medqa.json")
 
+# fallback for cloud
+if not os.path.exists(file_path):
+    file_path = os.path.join(BASE_DIR, "backend", "dashboard_medqa.json")
+
+with open(file_path) as f:
+    data = json.load(f)
+    
 summary = data.get("summary", {})
 results = pd.DataFrame(data.get("results", []))
 
